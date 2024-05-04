@@ -26,8 +26,6 @@ def send_message(client_socket):
             print(f"Si è verificato un errore: {e}")
             break
 
-
-
 # Creazione del socket del client
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
@@ -36,16 +34,21 @@ client_socket.connect((HOST, PORT))
 username = input("Benvenuto! Inserisci il tuo username: ")
 client_socket.sendall(username.encode('utf-8'))
 
-# Creazione dei thread per ricevere e inviare messaggi
-receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
-send_thread = threading.Thread(target=send_message, args=(client_socket,))
+# Ricezione della risposta del server
+response = client_socket.recv(1024).decode('utf-8')
+print(response)  # Stampa la risposta del server
 
-# Avvio dei thread
-receive_thread.start()
-send_thread.start()
+if response != "Username già in uso. Per favore, prova un altro.":
+    # Se l'username è accettato dal server, avvia i thread per ricevere e inviare messaggi
+    receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
+    send_thread = threading.Thread(target=send_message, args=(client_socket,))
 
-# Attendo la terminazione del thread di invio
-send_thread.join()
+    # Avvio dei thread
+    receive_thread.start()
+    send_thread.start()
 
-# Chiusura del socket del client
-client_socket.close()
+    # Attendo la terminazione del thread di invio
+    send_thread.join()
+else:
+    # Se l'username è già in uso, chiudi la connessione
+    client_socket.close()
