@@ -1,6 +1,10 @@
 import socket
 import threading
 
+# Indirizzo IP e porta del server
+HOST = '127.0.0.1'
+PORT = 9090
+
 # Funzione per ricevere i messaggi dal server
 def receive_messages(client_socket):
     while True:
@@ -8,7 +12,7 @@ def receive_messages(client_socket):
             message = client_socket.recv(1024).decode('utf-8')
             print(message)
         except ConnectionResetError:
-            print("Connection to server lost.")
+            print("Connessione al server persa.")
             break
 
 # Funzione per inviare un messaggio al server
@@ -19,19 +23,17 @@ def send_message(client_socket):
             if message:
                 client_socket.send(message.encode('utf-8'))
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"Si è verificato un errore: {e}")
             break
 
-# Indirizzo IP e porta del server
-HOST = '127.0.0.1'
-PORT = 9090
+
 
 # Creazione del socket del client
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
 # Richiesta del nome utente
-username = input("Welcome! Enter your username: ")
+username = input("Benvenuto! Inserisci il tuo username: ")
 client_socket.sendall(username.encode('utf-8'))
 
 # Creazione dei thread per ricevere e inviare messaggi
