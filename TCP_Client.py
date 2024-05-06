@@ -6,7 +6,7 @@ HOST = '127.0.0.1'
 PORT = 9090
 
 # Funzione per ricevere i messaggi dal server
-def receive_messages(client_socket):
+def receiveMsg(client_socket):
     while True:
         try:
             message = client_socket.recv(1024).decode('utf-8')
@@ -16,7 +16,7 @@ def receive_messages(client_socket):
             break
 
 # Funzione per inviare un messaggio al server
-def send_message(client_socket):
+def sendMsg(client_socket):
     while True:
         try:
             message = input()
@@ -40,8 +40,8 @@ print(response)  # Stampa la risposta del server
 
 if response != "Username già in uso. Per favore, prova un altro.":
     # Se l'username è accettato dal server, avvia i thread per ricevere e inviare messaggi
-    receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
-    send_thread = threading.Thread(target=send_message, args=(client_socket,))
+    receive_thread = threading.Thread(target=receiveMsg, args=(client_socket,))
+    send_thread = threading.Thread(target=sendMsg, args=(client_socket,))
 
     # Avvio dei thread
     receive_thread.start()
