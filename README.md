@@ -13,6 +13,7 @@ Open a terminal or command prompt.
 Navigate to the program directory using the cd command.
 Run the server by executing the server.py file with Python:
 
+```plaintext
 python server.py
 
 
@@ -22,4 +23,5 @@ Open another terminal or command prompt.
 Navigate to the same directory as the program.
 Run the client by executing the client.py file with Python:
 
+```plaintext
 python client.py
