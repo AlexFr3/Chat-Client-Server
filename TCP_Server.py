@@ -39,7 +39,7 @@ class ChatRequestHandler(socketserver.BaseRequestHandler):
                 else:
                     # Invia il messaggio a tutti i client
                     broadcast_message(f"{username}: {message}")
-            except ConnectionResetError:
+            except (ConnectionResetError, ConnectionAbortedError):
                 break
             except Exception as e:
                 print(f"Errore durante la gestione del messaggio: {e}")
