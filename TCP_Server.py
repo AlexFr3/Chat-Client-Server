@@ -24,7 +24,7 @@ class ChatRequestHandler(socketserver.BaseRequestHandler):
             else:
                 clients[username] = self.request
                 break  
-        clients[username] = self.request  # Aggiunge la connessione client al dizionario
+        clients[username] = self.request  # Aggiunge la connessione client alla lista
         try:
             broadcast_message(f"{username} si è unito alla chat.")  # Invia un messaggio a tutti i client
             print(f"{username} si è unito alla chat.")  # Stampa un messaggio sulla console del server
