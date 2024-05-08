@@ -7,13 +7,19 @@ PORT = 9090
 
 # Funzione per ricevere i messaggi dal server
 def receiveMsg(client_socket):
-    while True:
-        try:
+    try:
+        while True:
             message = client_socket.recv(1024).decode('utf-8')
+            if not message:
+                print("Connessione al server chiusa.")
+                break
             print(message)
-        except ConnectionResetError:
-            print("Connessione al server persa.")
-            break
+    except ConnectionResetError:
+        print("Connessione al server persa.")
+    except ConnectionAbortedError:
+        print("Connessione al server interrotta.")
+    except Exception as e:
+        print(f"Si è verificato un errore: {e}")
 
 # Funzione per inviare un messaggio al server
 def sendMsg(client_socket):
@@ -22,13 +28,8 @@ def sendMsg(client_socket):
             message = input()
             if message:
                 client_socket.send(message.encode('utf-8'))
-                
-        except KeyboardInterrupt:
-            print("L'utente ha abbandonato la chat.")
-            client_socket.close()
-        
         except Exception as e:
-            print(f"Si è verificato un errore: {e}")
+            print(f"Messaggio di sistema: {e}")
             break
 
 # Creazione del socket del client
@@ -38,7 +39,12 @@ while True:
         client_socket.connect((HOST, PORT))
         
         # Richiesta del nome utente
-        username = input("Benvenuto! Inserisci il tuo username: ")
+        try:
+            username = input("Benvenuto! Inserisci il tuo username (Ctrl+C per chiudere la chat): ")
+        except KeyboardInterrupt:
+            print("\nHai abbandonato la chat.")
+            break
+        
         client_socket.sendall(username.encode('utf-8'))
 
         # Ricezione della risposta del server
@@ -54,11 +60,17 @@ while True:
             receive_thread.start()
             send_thread.start()
 
-            # Attendo la terminazione del thread di invio
-            send_thread.join()
+            try:
+                # Attendo la terminazione del thread di invio
+                send_thread.join()
+            except KeyboardInterrupt:
+                print("Hai abbandonato la chat.")
+                client_socket.close()
+                break
         else:
             # Se l'username è già in uso, chiudi la connessione
             client_socket.close()
+            
     except ConnectionRefusedError:
         print("Connessione con il server rifiutata")
         break
