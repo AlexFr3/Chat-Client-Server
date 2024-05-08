@@ -41,6 +41,14 @@ while True:
         # Richiesta del nome utente
         try:
             username = input("Benvenuto! Inserisci il tuo username (Ctrl+C per chiudere la chat): ")
+            if not username:
+                print("Lo username non può essere vuoto. Riprova.")
+                continue
+            else:
+                client_socket.sendall(username.encode('utf-8'))
+                # Ricezione della risposta del server
+                response = client_socket.recv(1024).decode('utf-8')
+                print(response)  # Stampa la risposta del server
         except KeyboardInterrupt:
             print("\nHai abbandonato la chat.")
             break
