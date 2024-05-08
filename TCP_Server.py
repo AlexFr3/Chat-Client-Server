@@ -24,8 +24,7 @@ class ChatRequestHandler(socketserver.BaseRequestHandler):
             else:
                 clients[username] = self.request
                 break  
-        if username is not None:
-            clients[username] = self.request  # Aggiunge la connessione client alla lista
+            
         try:
             broadcast_message(f"{username} si è unito alla chat.")  # Invia un messaggio a tutti i client
             print(f"{username} si è unito alla chat.")  # Stampa un messaggio sulla console del server
@@ -47,9 +46,8 @@ class ChatRequestHandler(socketserver.BaseRequestHandler):
         
         del clients[username]  # Rimuove la connessione client dal dizionario
         try:
-            if username in clients:
-                broadcast_message(f"{username} ha lasciato la chat.")  # Invia un messaggio a tutti i client
-                print(f"{username} ha lasciato la chat.")  # Stampa un messaggio sulla console del server
+            broadcast_message(f"{username} ha lasciato la chat.")  # Invia un messaggio a tutti i client
+            print(f"{username} ha lasciato la chat.")  # Stampa un messaggio sulla console del server
         except Exception as e:
             print(f"Errore nell'invio del messaggio di uscita: {e}")
 
